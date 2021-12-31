@@ -1,5 +1,5 @@
 # Current-measurement using current sensor and lcd
-Using Bynk
+Use Blynk app
 
 I use ACS712 current sensor with LCD I2C.
 
