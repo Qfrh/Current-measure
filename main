@@ -1,0 +1,78 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2c.h>
+
+#include <BlynkSimpleEsp8266.h>
+
+LiquidCrystal_I2c lcd(0x27,16,2);
+
+//You should get Auth Token in this Bynk App
+//Go to the Project Settings (nut icon)
+char auth[] = "Get your own token";
+
+//Your wifi credentials.
+//set password to "" for open networks
+char ssid[] = "Your ssid";
+char pass[] = "Your pass";
+
+const int sensorIn =A0;
+int mVperAmp = 185; //use 100 for 20A Module and 66 for 3A Module
+
+double Voltage = 0;
+double VRMS = 0;
+double AmpsRMS = 0;
+WidgetLCD vlcd(V1);
+
+BlynkTimer timer;
+
+void setup() {
+  //put your setup code here to run once
+  Serial.begin(auth, ssid, pass);
+  timer.setInterval(1000L, sensorDataSend);
+}
+
+void sensorDataSend () {
+  Voltage = getVPP();
+  VRMS = (Voltage/2.0) *0.707;
+  AmpsRMS = (VRMS * 1000)/mVperAmp;
+  
+  Serial.print(AmpsRMS);
+  Serial.printIn("AmpsRMS");
+  lcd.print(AmpsRMS);
+  lcd.printIn("AmpsRMS");
+  
+  vlcd.clear();
+  vlcd.print(4, 0, AmpsRMS);
+  vlcd.print(4, 1, "AmpsRMS");
+  delay(500);
+}
+ 
+void loop() {
+  Bynk.run();
+  timer.run();
+}
+
+float getVPP() {
+  float result;
+  
+  int readValur
+  int maxValue = 0;
+  int minValue = 1024;
+  
+  uint32_t start_time = millis();
+  while((millis()-start_time) <1000) //for 1 sec
+  {
+      readValue = analogRead(sensorIn);
+      if (readValue > maxValue)
+      {
+          maxValue = readValue;
+      }
+      if (readValue < minValue)
+      {
+          minValue = readValue;
+      }
+  }      
+  //Subtract min from max
+  result = (maxvalue - minvalue) * 5.0)/1024.0;
+  return result;
+  }
+  
